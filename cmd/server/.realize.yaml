@@ -1,0 +1,21 @@
+settings:
+  legacy:
+    force: false
+    interval: 0s
+schema:
+  - name: falcon
+    commands:
+      build:
+        status: true
+        method: go build -o /go/bin/falcon
+      run:
+        status: true
+        method: /go/bin/falcon
+    watcher:
+      extensions:
+        - go
+      paths:
+        - ../../
+      ignored_paths:
+        - .git
+        - .realize
