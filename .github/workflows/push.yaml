@@ -1,0 +1,37 @@
+on:
+  push:
+
+jobs:
+  test:
+    name: runner / test
+    runs-on: ubuntu-18.04
+    steps:
+      - name: setup Go environment
+        uses: actions/setup-go@v1
+        with:
+          go-version: "1.14"
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: cache go modules
+        id: cache_mods
+        uses: actions/cache@v1
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: go build
+        run: go build ./cmd/server/main.go
+      - name: test
+        run: go test ./... -v
+  lint:
+    name: runner / lint
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: reviewdog/action-golangci-lint@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          golangci_lint_flags: "--config=config/.golangci.yml"
