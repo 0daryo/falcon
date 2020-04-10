@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: ../../.
+      dockerfile: build/server/dev.dockerfile
+    volumes:
+      - ../..:/go/src/github.com/0daryo/falcon
+    working_dir: /go/src/github.com/0daryo/falcon/cmd/server
+    ports:
+      - "8080:8080"
+    environment:
+      - ENV=local
